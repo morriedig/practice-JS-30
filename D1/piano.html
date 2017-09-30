@@ -93,14 +93,14 @@
         <kbd>Do(o)</kbd>
       </div>
 
-      <audio data-key="87" src="sounds/Do.wav"></audio>
-      <audio data-key="69" src="sounds/Re.wav"></audio>
-      <audio data-key="82" src="sounds/Mi.wav"></audio>
-      <audio data-key="84" src="sounds/Fa.wav"></audio>
-      <audio data-key="89" src="sounds/So.wav"></audio>
-      <audio data-key="85" src="sounds/La.wav"></audio>
-      <audio data-key="73" src="sounds/Si.wav"></audio>
-      <audio data-key="79" src="sounds/do(octave).wav"></audio>
+      <audio data-key="87" src="sounds/pianoC.mp3"></audio>
+      <audio data-key="69" src="sounds/pianoD.mp3"></audio>
+      <audio data-key="82" src="sounds/pianoE.mp3"></audio>
+      <audio data-key="84" src="sounds/pianoF.mp3"></audio>
+      <audio data-key="89" src="sounds/pianoG.mp3"></audio>
+      <audio data-key="85" src="sounds/pianoA.mp3"></audio>
+      <audio data-key="73" src="sounds/pianoB.mp3"></audio>
+      <audio data-key="79" src="sounds/pianoC2.mp3"></audio>
     </div>
   </div>
   <script>
@@ -116,8 +116,10 @@
       const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
       const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
       const animate = document.querySelector(`.animate[data-key="${e.keyCode}"]`);
+      if(!animate){return};
+      create_ani( "${e.keyCode}","Do");
       if (!audio){return};
-      // create_ani( "87","Do");
+      
       audio.currentTime = 0;
       key.classList.add('play');
       animate.classList.add('animate_late');
