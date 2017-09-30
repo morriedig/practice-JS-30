@@ -33,39 +33,68 @@
       transform: rotateX(50deg) scaleY(1.4);
     }
     .bounder{
-      width: 40%;
+      width: 80%;
       margin:10vh auto;
       color: white;
       font-size: 1.5rem;
       overflow: hidden;
-      border:1px solid white;
-      height: 30vh;
+/*      border:1px solid white;*/
+      height: 36vh;
+  /*    position: relative;*/
+    }
+    .road{
+      display: block;
+      position: relative;
+      height: 4vh;
+      width: 100%;
     }
     .animate{
       visibility: hidden;
-      transition: transform 5s;
-      display: block;
+      transition: transform 10s;
+      display: inline-block;
+/*      color:red;*/
+/*      border: 1px solid black;*/
+      position: absolute;
+      top: 0;
+      left: 0;
    /*   transition: visibility 3s;*/
     }
     .animate_late{
-      transform:translateX(100%);
+      transform:translateX(1500px);
       color: white;
       visibility:visible;
-/*      transition: visibility 5s;*/
+      display:inline-block;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="bounder">
-      <kbd data-key="87" class="animate">Do</kbd>
-      <kbd data-key="69" class="animate">Re</kbd>
-      <kbd data-key="82" class="animate">Mi</kbd>
-      <kbd data-key="84" class="animate">Fa</kbd>
-      <kbd data-key="89" class="animate">So</kbd>
-      <kbd data-key="85" class="animate">La</kbd>
-      <kbd data-key="73" class="animate">Si</kbd>
-      <kbd data-key="79" class="animate">Do</kbd>
+      <div data-key="87" class="road">
+        <kbd data-key="87" class="animate">Do</kbd>
+        <kbd data-key="87" class="animate">Do</kbd>
+      </div><div data-key="69" class="road">
+        <kbd data-key="69" class="animate">Re</kbd>
+        <kbd data-key="69" class="animate">Re</kbd>
+      </div><div data-key="82" class="road">
+        <kbd data-key="82" class="animate">Mi</kbd>
+        <kbd data-key="82" class="animate">Mi</kbd>
+      </div><div data-key="84" class="road"">
+        <kbd data-key="84" class="animate">Fa</kbd>
+        <kbd data-key="84" class="animate">Fa</kbd>
+      </div><div data-key="89" class="road">
+        <kbd data-key="89" class="animate">So</kbd>
+        <kbd data-key="89" class="animate">So</kbd>
+      </div><div data-key="85" class="road">
+        <kbd data-key="85" class="animate">La</kbd>
+        <kbd data-key="85" class="animate">La</kbd>
+      </div><div data-key="73" class="road">
+        <kbd data-key="73" class="animate">Si</kbd>
+        <kbd data-key="73" class="animate">Si</kbd>
+      </div><div data-key="79" class="road">
+        <kbd data-key="79" class="animate">Do</kbd>
+        <kbd data-key="79" class="animate">Do</kbd>
+      </div>
     </div>
     <div class="border">
       <div data-key="87" class="key">
@@ -104,40 +133,47 @@
     </div>
   </div>
   <script>
-    function create_ani(key,symbol){
-      var bounder = document.getElementsByClassName('bounder')[0];
-      var animate = document.createElement('kdb');
-      animate.className = 'animate' ;
-      animate.setAttribute('data-key', key);
-      animate.innerText = symbol ;
-      bounder.appendChild(animate);
-    }
+    var n;
     window.addEventListener('keydown',function(e){
       const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
       const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
-      const animate = document.querySelector(`.animate[data-key="${e.keyCode}"]`);
-      if(!animate){return};
-      create_ani( "${e.keyCode}","Do");
+      var animate = document.querySelector(`.animate[data-key="${e.keyCode}"]`);
       if (!audio){return};
       
       audio.currentTime = 0;
       key.classList.add('play');
-      animate.classList.add('animate_late');
       audio.play();
+      //音符出現的部分
+      if(!animate){return};
+      const animate_late = animate.cloneNode(true);
+      const road = document.querySelector(`.road[data-key="${e.keyCode}"]`);
+      road.appendChild(animate_late);
+      function addElement(callback){
+        animate = road.getElementsByClassName('animate');
+        n = animate.length -2 ;
+        callback();
+      }
+      function  changeCss(){
+        animate[n].classList.add('animate_late');
+        console.log(animate[n]);
+        if(animate[2].style.left < 300 ){return}
+      }
+      addElement(changeCss);
       })
+    ///這邊截止
     function removeTranstion(e){
       if (e.propertyName !== 'transform'){return}
       this.classList.remove('play');
     }
-    function removeAnimate(e){
-      if(e.propertyName !== 'transform'){return}
-      this.classList.remove('animate_late');
-    }
+    // function removeAnimate(e){
+    //   if(e.propertyName !== 'transform'){return}
+    //   this.classList.remove('animate_late');
+    // }
 
     const keys = document.querySelectorAll('.key');
     keys.forEach(key => key.addEventListener('transitionend',removeTranstion))
-    const animates = document.querySelectorAll('.animate');
-    animates.forEach(animate => animate.addEventListener('transitionend', removeAnimate))
+    // const animates = document.querySelectorAll('.animate');
+    // animates.forEach(animate => animate.addEventListener('transitionend', removeAnimate))
   </script>
 </body>
 </html>
