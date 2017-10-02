@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clock HW</title>
+  <style>
+  html{
+   /* box-sizing: border-box;*/
+    margin: 0;
+    padding: 0;
+  }
+    body{
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    .container{
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      padding: 0;
+      margin:0;
+    }
+    .clock{
+      width: 99vh;
+      height: 99vh;
+      border-radius: 50%;
+      border:2px solid black;
+      margin:0 auto;
+      position: relative;
+    }
+    .center{
+      position: absolute;
+      top:50%;
+      left: 49.5%;
+      width: 1%;
+      height: 1%;
+      background:black;
+      border-radius: 50%;
+      border: 1px solid black;
+    }
+    .secondHand, .minHand, .hourHand{
+      background-color: black;
+      border: 1px solid black;
+      position: absolute;
+      top:50%;
+      left: 50%;
+      height: 3px;
+      border-radius:2px;
+      transition: all 0.05s;
+      transform-origin:0; 
+      transition-timing-function: cubic-bezier(0.3,2.7,0.5,1);
+      transform: rotate(270deg);
+    }
+    .secondHand{
+      width: 42%;
+      transform: rotate(270deg);
+    }
+    .minHand{
+      width: 40%;
+      transform: rotate(270deg);
+    }
+    .hourHand{
+      width: 27%;
+      height: 5px;
+      border-radius: 4px;
+      top:50%;
+    }
+    .top, .bot{
+      height: 50vh;
+      width: 100%;
+      position: absolute;
+      visibility: hidden;
+    }
+    .top{
+      top:0;
+      background-color: yellow;
+      margin: 0;
+      padding: 0;
+    }
+    .bot{
+      top:50vh;
+      background-color: gray;
+    }
+  </style>
+</head>
+<body>
+  <div class="body">
+    <div class="container">
+      <div class="clock">
+        <div class="center"></div>
+        <div class="secondHand"></div>
+        <div class="minHand"></div>
+        <div class="hourHand"></div>
+      </div>
+      <div class="top"></div>
+      <div class="bot"></div>
+    </div>
+  </div>
+  <script>
+      
+      
+      
+    var tem_time=10,seconds,mins,hours;
+    //正常移動
+    function clock(){
+      //秒針
+      const now = new Date();
+      seconds = now.getSeconds();
+      var secondDeg = (seconds*6)-90;
+      var secondHand = document.querySelector('.secondHand');
+      if (secondDeg === -90 ){secondHand.style.transition = "all 0s"} else{secondHand.style.transition = "all 0.05s";secondHand.style.transitionTimingFunction= "cubic-bezier(0.3,2.7,0.5,1)";}
+      secondHand.style.transform = `rotate(${secondDeg}deg)`;
+      //分針
+      mins = now.getMinutes();
+      var minDeg = (mins*6)-90;
+      var minHand = document.querySelector('.minHand');
+      if (minDeg === -90 ){minHand.style.transition = "all 0s"} else{minHand.style.transition = "all 0.05s";secondHand.style.transitionTimingFunction= "cubic-bezier(0.3,2.7,0.5,1)";}
+      minHand.style.transform = `rotate(${minDeg}deg)`;
+      //時針
+      hours = now.getHours();
+      var hourDeg = (hours/12)*360-90;
+      var hourHand = document.querySelector('.hourHand');
+      if (hourDeg === -90 ){hourHand.style.transition = "all 0s"} else{hourHand.style.transition = "all 0.05s";hourHand.style.transitionTimingFunction= "cubic-bezier(0.3,2.7,0.5,1)";}
+      hourHand.style.transform = `rotate(${hourDeg}deg)`;
+    }
+    var timer = setInterval(clock,1000);
+    clock();
+    //時間開始快轉
+    function speedup(){
+      clearInterval(timer);
+      var hourHand = document.querySelector('.hourHand');
+      var secondHand = document.querySelector('.secondHand');
+      var minHand = document.querySelector('.minHand');
+      var clock = document.querySelector('.clock');
+      clock.style.opacity = '0.2';
+      clock.style.zIndex = '5';
+      secondDeg = (seconds*6)-90 + tem_time;
+      minDeg = (mins*6)-90 + (tem_time/2);
+      hourDeg = (hours/12)*360-90 +(tem_time/8) ;
+      secondHand.style.transform = `rotate(${secondDeg}deg)`;
+      secondHand.style.transition = '0s';
+      minHand.style.transform = `rotate(${minDeg}deg)`;
+      hourHand.style.transform = `rotate(${hourDeg}deg)`;
+      tem_time += 1;
+      timer = setInterval(speedup, 5);
+      clock.onclick = null ;
+      var top = document.querySelector('.top');
+      var bot = document.querySelector('.bot');
+      top.style.visibility = 'visible';
+      bot.style.visibility = 'visible';
+    }
+    var clock = document.querySelector('.clock');
+    clock.onclick = function(){speedup()};
+    
+  </script>
+</body>
+</html>
