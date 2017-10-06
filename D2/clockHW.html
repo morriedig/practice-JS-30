@@ -28,6 +28,15 @@
       border:2px solid black;
       margin:0 auto;
       position: relative;
+      transition: opacity 1s;
+/*      字幕設定*/
+      font-size: 30rem;
+      line-height: 2em;
+      text-align: center;
+  /*    z-index: 1;*/
+    }
+    .clock1{
+      opacity: 0.2;
     }
     .center{
       position: absolute;
@@ -67,13 +76,11 @@
       top:50%;
     }
     .content{
-      background-color: white;
       position: absolute;
       top: 0;
       left: 0;
       height: 100vh;
       width: 100%;
-      z-index: -1;
     }
     .topAll, .botAll{
       width: 100%;
@@ -91,51 +98,55 @@
       margin:0;
       padding: 0;
       transition: all 1s;
+      position: absolute;
     }
     .top{ 
       background-color: yellow;
     }
     .bot{
-      top:50vh;
       background-color: gray;
     }
     .top1{
-      background-color: red;
+      width: 20%;
+ /*     z-index: 1;*/
     }
     .bot1{
-      background-color: black;
+      width:20%;
+/*      z-index: 1;*/
     }
   </style>
 </head>
 <body>
   <div class="body">
     <div class="container">
+      <div class="content">
+        <div class="topAll">
+          <div class="top" style="left:0"></div>
+          <div class="top" style="left:20%"></div>
+          <div class="top" style="left:40%"></div>
+          <div class="top" style="left:60%"></div>
+          <div class="top" style="left:80%"></div>
+        </div>
+        <div class="botAll">
+          <div class="bot" style="left:0"></div>
+          <div class="bot" style="left:20%"></div>
+          <div class="bot" style="left:40%"></div>
+          <div class="bot" style="left:60%"></div>
+          <div class="bot" style="left:80%"></div>
+        </div>
+      </div>
       <div class="clock">
         <div class="center"></div>
         <div class="secondHand"></div>
         <div class="minHand"></div>
         <div class="hourHand"></div>
       </div>
-      <div class="content">
-        <div class="topAll">
-          <div class="top"></div>
-          <div class="top"></div>
-          <div class="top"></div>
-          <div class="top"></div>
-          <div class="top"></div>
-        </div>
-        <div class="botAll">
-          <div class="bot"></div>
-          <div class="bot"></div>
-          <div class="bot"></div>
-          <div class="bot"></div>
-          <div class="bot"></div>
-        </div>
-      </div>
+      <div class="image"></div>
+
     </div>
   </div>
   <script>  
-    var tem_time=10;
+    var time=10;
     //正常移動
     function clock(){
       //秒針
@@ -156,23 +167,36 @@
       var hourDeg = (hours/12)*360-90;
       var hourHand = document.querySelector('.hourHand');
       if (hourDeg === -90 ){hourHand.style.transition = "all 0s"} else{hourHand.style.transition = "all 0.05s";hourHand.style.transitionTimingFunction= "cubic-bezier(0.3,2.7,0.5,1)";}
-      hourHand.style.transform = `rotate(${hourDeg}deg)`;
+      hourHand.style.transform = `rotate(${hourDeg}deg)`; 
     }
     var timer = setInterval(clock,1000);
     clock();
-    //時間開始快轉
+
+    //順序: 時間正常-->click->出現背景，時鐘下沉->換場景，時鐘出現，幕拉起，此階段可有字幕出現(並在幕後更換背景)->幕拉起-->此後重複
+
+    //時鐘下沉，第一幕出現，單色，可加字幕
+    function changeFirst(){
+      document.body.style.backgroundColor = 'blue';
+      var clock = document.querySelector('.clock');
+      clock.classList.toggle('clock1');
+      document.body.innerHTML = "Lorem ipsum dolor sit amet.";
+      var start = setInterval
+    }
+
+    //時鐘上浮，幕拉上，字幕出現，body換背景
+    //幕拉起，時鐘下沉，body出現，字幕消失
+    //此過程重複
     function speedup(){
-      clearInterval(timer);
+      var tem_time = time;
       const now = new Date();
       var seconds = now.getSeconds();
       var mins = now.getMinutes();
       var hours = now.getHours();
-      var hourHand = document.querySelector('.hourHand');
-      var secondHand = document.querySelector('.secondHand');
-      var minHand = document.querySelector('.minHand');
       var clock = document.querySelector('.clock');
-      clock.style.opacity = '0.2';
-      clock.style.zIndex = '5';
+      var hourHand = clock.querySelector('.hourHand');
+      var secondHand = clock.querySelector('.secondHand');
+      var minHand = clock.querySelector('.minHand');
+      // clock.style.zIndex = '5';
       secondDeg = (seconds*6)-90 + tem_time;
       minDeg = (mins*6)-90 + (tem_time/2);
       hourDeg = (hours/12)*360-90 +(tem_time/8);
@@ -180,24 +204,49 @@
       secondHand.style.transition = '0s';
       minHand.style.transform = `rotate(${minDeg}deg)`;
       hourHand.style.transform = `rotate(${hourDeg}deg)`;
-      tem_time += 1;
-      timer = setInterval(speedup, 5);
-      clock.onclick = null; 
+      time += 1;
     }
     //換顏色
     function changeBG(){
       var top = document.querySelectorAll('.top');
       var bot = document.querySelectorAll('.bot');
-      for(i =0; i<5 ; i++){
-        top[i].style.width = '20%';
-        bot[i].style.width = '20%';
-        }
-      document.onlick = function(){changeBG()}
+      var clock = document.querySelector('.clock');
+      console.log(top);
+      clock.classList.toggle('clock1');
+      top.forEach(function(e){
+        e.classList.toggle('top1');
+      });
+      bot.forEach(function(e){
+        e.classList.toggle('bot1');
+      });
+      
+      // for(i =0; i<5 ; i++){
+      //   top[i].style.width = '20%';
+      //   bot[i].style.width = '20%';
+      //   }
+      var colorArray = ["#77FFCC","#BBFF00","#FF88C2","pink","#9955FF","#D28EFF","#FFB3FF"]
+      if (!top[0].classList.contains('top1')){
+        var color = colorArray[Math.floor(Math.random()*7)];
+        document.querySelector('.body').style.backgroundColor = color;
+        document.querySelector('.body').style.zIndex="200";
+      }
+      else{
+        document.querySelector('.body').style.backgroundColor = null;
+      }
     }
     var clock = document.querySelector('.clock');
-    clock.onclick = function(){speedup();changeBG();};
-    
+    //開始執行->此段之後可改為setTimeout
+    clock.onclick = function(){
+      clearInterval(timer);
+      document.querySelector('.clock').classList.toggle('clock1');
+      changeBG();
+      //速度太快，會影響畫面，   是否有其他解決辦法!?
+      timer = setInterval(speedup,200);
+      document.querySelector('.clock').onclick = changeBG;   //click 沒刪除的話 會累加嗎!?
 
+    };
+    
+    //最後一幕
 
   </script>
 </body>
