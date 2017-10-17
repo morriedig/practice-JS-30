@@ -1,0 +1,155 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>clockHW</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .container{
+        overflow: hidden;
+        width: 100%;
+        height: 100vh; 
+        background: url(背景.png) no-repeat center center;
+        background-size: cover;
+      }
+      .clock{
+        width: 500px;
+        margin:10vh auto;
+        padding: 0;
+        position: relative;
+        height: 250px;
+      }
+      .img_clock{
+        position: absolute;
+        top: 0;
+        left: 0;
+   /*       border: 1px solid black;*/
+      }
+      .minHand{
+        height: 220px;
+        position: absolute;
+        z-index: 1;
+        top: 50px;
+        left: 46%;
+/*        border: 1px solid black;
+*/        transform-origin: 22px 200px;
+        transform: rotate(0deg);
+      }
+      .hourHand{
+        height: 180px;
+        position: absolute;
+        z-index: 1;
+        top:90px;
+        left: 43.1%;
+        transform-origin: 35px 160px;
+        transform: rotate(0deg);
+      }
+      .gearblock{
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100%;
+        overflow: hidden;
+
+      }
+      .gear{
+       /* border: 1px solid black;*/
+        position: absolute;
+        left: 50%;
+      }
+      .gear2{
+        top: -3%;
+        left: 3%;
+        width: 19%;
+      }
+      .gear1{
+        width: 18%;
+        top: 53%;
+        left: 17%;
+      }
+      .gear3{
+        top: 51%;
+        left: 3%;
+        width: 12%;
+      }
+      .gear4{
+        top: -16%;
+        left: 71%;
+        width: 32%;
+      }
+      .gear5{
+        top: 59%;
+        left: 57%;
+        width: 20%;
+        z-index: -1;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="clock">
+        <img class="img_clock" src="clock.png" alt="">
+        <img class="minHand" src="時針.png" alt="">
+        <img class="hourHand" src="hourshand.png" alt="">
+      </div>
+      <div class="gearblock">
+        <img src="齒輪1.png" alt="" class="gear1 gear">
+        <img src="齒輪3.png" alt="" class="gear2 gear">
+        <img src="齒輪4.png" alt="" class="gear3 gear">
+        <img src="齒輪5.png" alt="" class="gear4 gear">
+        <img src="齒輪6.png" alt="" class="gear5 gear">
+      </div>
+    </div>
+    <script>
+      let minDeg = 0;
+      let hourDeg = 0,secondDeg=0;
+      const minHand = document.querySelector('.minHand');
+      const hourHand = document.querySelector('.hourHand');
+      const gear1 = document.querySelector('.gear1');
+      const gear2 = document.querySelector('.gear2');
+      const gear3 = document.querySelector('.gear3');
+      const gear4 = document.querySelector('.gear4');
+      const gear5 = document.querySelector('.gear5');
+
+      function initDate(){
+        const date = new Date();
+        const seconds = date.getSeconds();
+        secondDeg = seconds*6;
+        const mins = date.getMinutes();
+        minDeg = mins*6 + seconds/10;
+        const hours = date.getHours();
+        hourDeg = hours*30 + mins/2 + seconds/120;
+        minHand.style.transform = `rotate(${minDeg}Deg)`;
+        hourHand.style.transform = `rotate(${hourDeg}Deg)`;
+      }
+
+      function updateDate(){
+        secondDeg += (3);
+        minDeg += (1/10);
+        hourDeg += (1/120);
+        minHand.style.transform = `rotate(${minDeg}Deg)`;
+        hourHand.style.transform = `rotate(${hourDeg}Deg)`;
+        gear1.style.transform = `rotate(${secondDeg}Deg)`;
+        gear2.style.transform = `rotate(${secondDeg}Deg)`;
+        gear4.style.transform = `rotate(${secondDeg}Deg)`;
+      }
+
+      function rotateGear3(){
+        let gear3Deg =+ 2;
+        let gear5Deg =+5 ;
+        gear3.style.transform = `rotate(${secondDeg}Deg)`;
+        gear5.style.transform = `rotate(${secondDeg}Deg)`;
+
+      }
+
+      initDate();
+      setInterval(updateDate, 1000);
+      setInterval(rotateGear3, 300);
+    </script>
+  </body>
+  </html>
